@@ -1,8 +1,11 @@
 from flask import Flask
 from flask_cors import CORS
-from .routes.health import blp
+from .routes.health import blp as health_blp
+from .routes.dashboard import blp as dashboard_blp
+from .routes.forms import blp as forms_blp
+from .routes.realtime import blp as realtime_blp
+from .error_handlers import register_error_handlers
 from flask_smorest import Api
-
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -13,6 +16,10 @@ app.config['OPENAPI_URL_PREFIX'] = '/docs'
 app.config["OPENAPI_SWAGGER_UI_PATH"] = ""
 app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
 
-
 api = Api(app)
-api.register_blueprint(blp)
+api.register_blueprint(health_blp)
+api.register_blueprint(dashboard_blp)
+api.register_blueprint(forms_blp)
+api.register_blueprint(realtime_blp)
+
+register_error_handlers(app)
